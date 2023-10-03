@@ -1,0 +1,20 @@
+extends layout 
+
+block content 
+
+    h1 #{blog_post.title}
+    h3 Written by: #{blog_post.user.user_name}
+    h4 Published #{blog_post.date}
+    p #{blog_post.text}
+    br
+
+    if blog_post.comments 
+        each comment in comments 
+            div
+                h5 #{comment.user.user_name}
+                p #{comment.text}
+                p -- #{comment.date}
+                hr
+                
+    else 
+        p No comments yet!

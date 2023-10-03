@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const { DateTime } = require('luxon');
-const { text } = require('express');
 
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-  text: { type: text, required: true, maxLength: 500 },
+  text: { type: Text, required: true, maxLength: 500 },
   date: { type: Date, default: Date.now },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   post: { type: Schema.Types.ObjectId, ref: 'Post', required: true }

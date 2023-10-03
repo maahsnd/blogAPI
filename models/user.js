@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { DateTime } = require('luxon');
-const { text } = require('express');
 
 const Schema = mongoose.Schema;
 

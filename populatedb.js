@@ -1,6 +1,8 @@
 #! /usr/bin/env node
 const dotenv = require('dotenv').config();
-const { Comment, Post, User } = require('./models');
+const Comment = require('./models/comment');
+const Post = require('./models/post');
+const User = require('./models/user');
 
 const mongoDB = process.env.MONGO;
 
@@ -45,24 +47,24 @@ async function userCreate(
   console.log(`Added user: ${user}`);
 }
 
-async function postCreate(index, title, text, author) {
+async function postCreate(index, title, text, user) {
   const postDetail = {
     title: title,
     text: text,
-    author: author,
+    user: user,
     published: true
   };
 
   const post = new Post(postDetail);
-  await posts.save();
+  await post.save();
   posts[index] = post;
   console.log(`Added post: ${post}`);
 }
 
-async function commentCreate(index, text, author, post) {
+async function commentCreate(index, text, user, post) {
   const commentDetail = {
     text: text,
-    author: author,
+    user: user,
     post: post
   };
 
@@ -70,6 +72,9 @@ async function commentCreate(index, text, author, post) {
 
   await comment.save();
   post.comments[index] = comment;
+  const updatedPost = await Post.findByIdAndUpdate(post._id, post, {});
+  await updatedPost.save();
+
   console.log(`Added comment: ${comment}`);
 }
 

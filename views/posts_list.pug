@@ -8,7 +8,7 @@ block content
             each post in posts 
                 div 
                 h3 #{post.title}
-                h4 By: #{post.author.user_name}
+                h4 By: #{post.user.user_name}
                 p #{post.formatted_date}
                 p #{post.text}  
                 hr
@@ -16,7 +16,7 @@ block content
                 if comments
                     each comment in post.comments 
                         div
-                        h5 #{comment.author.user_name}
+                        h5 #{comment.user.user_name}
                         p #{comment.text}
                         p -- #{comment.date}
                         hr

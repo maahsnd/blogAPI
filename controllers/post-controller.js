@@ -4,8 +4,8 @@ const Comments = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 
-//Display list of all posts
-exports.all_posts_get = asyncHandler(async (req, res, next) => {
+//Display list of all blog posts
+exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
   const allPosts = await Post.find({ published: true })
     .populate('user')
     .populate('comments')
@@ -20,3 +20,5 @@ exports.all_posts_get = asyncHandler(async (req, res, next) => {
     .exec();
   res.render('posts_list', { title: 'All posts', posts: allPosts });
 });
+
+exports.blogpost_get;

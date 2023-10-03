@@ -13,7 +13,7 @@ block content
                 p #{post.text}  
                 hr
                 h4 Comments 
-                if comments
+                if post.comments
                     each comment in post.comments 
                         div
                         h5 #{comment.user.user_name}

@@ -11,10 +11,15 @@ block content
         p #{post.text}  
         hr
         h4 Comments 
-        for each comment in post.comments 
-            div
-            h5 #{comment.author.user_name}
-            p #{comment.text}
-            p -- #{comment.date}
-            hr
+        if comments
+            for each comment in post.comments 
+                div
+                h5 #{comment.author.user_name}
+                p #{comment.text}
+                p -- #{comment.date}
+                hr
+        else 
+            p No comments yet! 
         hr
+    else 
+        p No posts yet!

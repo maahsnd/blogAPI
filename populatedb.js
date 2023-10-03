@@ -61,19 +61,20 @@ async function postCreate(index, title, text, user) {
   console.log(`Added post: ${post}`);
 }
 
-async function commentCreate(index, text, user, post) {
+async function commentCreate(index, text, user, postIndex) {
   const commentDetail = {
     text: text,
-    user: user,
-    post: post
+    user: user._id,
+    post: posts[postIndex]._id
   };
 
   const comment = new Comment(commentDetail);
 
   await comment.save();
-  post.comments[index] = comment;
-  const updatedPost = await Post.findByIdAndUpdate(post._id, post, {});
-  await updatedPost.save();
+  console.log('comment: ' + comment);
+  posts[postIndex].comments.push(comment);
+  console.log('post: ' + posts[postIndex]);
+  await Post.findByIdAndUpdate(posts[postIndex]._id, posts[postIndex], {});
 
   console.log(`Added comment: ${comment}`);
 }
@@ -97,7 +98,7 @@ async function createPosts() {
 async function createComments() {
   console.log('Adding comments');
   await Promise.all([
-    commentCreate(0, 'testcomment', users[1], posts[0]),
-    commentCreate(1, '1testcomment', users[0], posts[0])
+    commentCreate(0, 'testcomment', users[1], 0),
+    commentCreate(1, '1testcomment', users[0], 0)
   ]);
 }

@@ -5,7 +5,7 @@ const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 
 //Display list of all posts
-exports.posts_get = asyncHandler(async (req, res, next) => {
+exports.all_posts_get = asyncHandler(async (req, res, next) => {
   const allPosts = await Post.find({ published: true })
     .populate('user')
     .populate('comments')

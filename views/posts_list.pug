@@ -2,24 +2,27 @@ extends layout
 
 block content 
     h1=title 
-    if posts    
-        for each post in posts 
-        div 
-        h3 #{post.title}
-        h4 By: #{post.author.user_name}
-        p #{post.formatted_date}
-        p #{post.text}  
-        hr
-        h4 Comments 
-        if comments
-            for each comment in post.comments 
-                div
-                h5 #{comment.author.user_name}
-                p #{comment.text}
-                p -- #{comment.date}
+
+        if posts.length   
+
+            each post in posts 
+                div 
+                h3 #{post.title}
+                h4 By: #{post.author.user_name}
+                p #{post.formatted_date}
+                p #{post.text}  
                 hr
+                h4 Comments 
+                if comments
+                    each comment in post.comments 
+                        div
+                        h5 #{comment.author.user_name}
+                        p #{comment.text}
+                        p -- #{comment.date}
+                        hr
+                else 
+                    p No comments yet! 
+                hr
+
         else 
-            p No comments yet! 
-        hr
-    else 
-        p No posts yet!
+            p No posts yet!

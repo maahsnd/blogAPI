@@ -7,7 +7,8 @@ block content
 
             each post in posts 
                 div 
-                h3 #{post.title}
+                h3
+                    a(href=`${post.url}`)  #{post.title}
                 h4 By: #{post.user.user_name}
                 p #{post.formatted_date}
                 p #{post.text}  

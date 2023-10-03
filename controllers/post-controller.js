@@ -18,7 +18,7 @@ exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
     })
     .sort({ date: -1 })
     .exec();
-  res.render('posts_list', { title: 'All posts', posts: allPosts });
+  res.send(allPosts);
 });
 
 exports.blogpost_get = asyncHandler(async (req, res, next) => {
@@ -36,5 +36,5 @@ exports.blogpost_get = asyncHandler(async (req, res, next) => {
   if (!blogPost.published) {
     throw new Error('post not published');
   }
-  res.render('blog_post', { blog_post: blogPost });
+  res.send(blogPost);
 });

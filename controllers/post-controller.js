@@ -36,5 +36,5 @@ exports.blogpost_get = asyncHandler(async (req, res, next) => {
   if (!blogPost.published) {
     throw new Error('post not published');
   }
-  res.render('blog_post', { blog_post: blog_post });
+  res.render('blog_post', { blog_post: blogPost });
 });

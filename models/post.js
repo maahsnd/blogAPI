@@ -17,7 +17,7 @@ PostSchema.virtual('formatted_date').get(function () {
 });
 
 PostSchema.virtual('url').get(function () {
-  return `/blog/posts/${this._id}`;
+  return `/posts/${this._id}`;
 });
 
 module.exports = mongoose.model('Post', PostSchema);

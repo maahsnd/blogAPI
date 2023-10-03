@@ -4,12 +4,12 @@ const { DateTime } = require('luxon');
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-  title: { type: Text, required: true, maxLength: 30 },
-  text: { type: Text, required: true, mingLength: 100, maxLength: 10000 },
+  title: { type: String, required: true, maxLength: 30 },
+  text: { type: String, required: true, mingLength: 100, maxLength: 10000 },
   date: { type: Date, default: Date.now },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-  published: { type: Booloean, default: false }
+  published: { type: Boolean, default: false }
 });
 
 PostSchema.virtual('formatted_date').get(function () {

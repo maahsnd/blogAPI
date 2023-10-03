@@ -21,4 +21,20 @@ exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
   res.render('posts_list', { title: 'All posts', posts: allPosts });
 });
 
-exports.blogpost_get;
+exports.blogpost_get = asyncHandler(async (req, res, next) => {
+  const blogPost = await Post.findById(req.params.id)
+    .populate('comments')
+    .populate('user')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'user',
+        populate: { path: 'user_name' }
+      }
+    })
+    .exec();
+  if (!blogPost.published) {
+    throw new Error('post not published');
+  }
+  res.render('blog_post', { blog_post: blog_post });
+});

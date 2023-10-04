@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Comments = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const passport = require('passport');
 
 //Display list of all blog posts
 exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
@@ -40,7 +41,11 @@ exports.blogpost_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.new_blogpost_get = asyncHandler(async (req, res, next) => {
-  res.send('render form to create new blog post');
+  if (req.isAuthenticated()) {
+    res.send('render form to create new blog post');
+  } else {
+    res.redirect('/users/log-in');
+  }
 });
 
 exports.new_blogpost_post = [
@@ -80,9 +85,12 @@ exports.new_blogpost_post = [
 ];
 
 exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
-  res.send('edit get');
+  if (req.isAuthenticated()) {
+    res.send('render form to edit blog post');
+  } else {
+    res.redirect('/users/log-in');
+  }
 });
 
-exports.blogpost_edit_post = asyncHandler(async (req, res, next) => {
-  res.send('edit post');
-});
+//to do
+exports.blogpost_edit_post = asyncHandler(async (req, res, next) => {});

@@ -93,7 +93,6 @@ exports.sign_up_post = [
         user.password = hashedPassword;
         await user.save();
       });
-      res.send(`user ${user.full_name} logged in successfully`);
     }
   })
 ];
@@ -103,13 +102,9 @@ exports.log_in_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.log_in_post = function (req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
-    if (err) return next(err);
-    if (!user) return res.send('no user');
-    req.logIn(user, function (err) {
-      if (err) return next(err);
-    });
-    return res.send(`${user} logged in successfully`);
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/log-in'
   })(req, res, next);
 };
 

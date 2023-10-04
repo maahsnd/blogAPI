@@ -90,8 +90,28 @@ exports.sign_up_post = [
   })
 ];
 
-exports.log_in_get = asyncHandler(async (req, res, next) => {});
+exports.log_in_get = asyncHandler(async (req, res, next) => {
+  res.send('Render log in form');
+});
 
-exports.log_in_post = asyncHandler(async (req, res, next) => {});
+exports.log_in_post = asyncHandler(async (req, res, next) => {
+  passport.authenticate('local');
+  if (!req.user) {
+    res.send('log in failed');
+    return;
+  } else {
+    res.send(`${req.user} signed in`);
+    return;
+  }
+});
+
+exports.logout_get = function (req, res, next) {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.send('Logged out');
+  });
+};
 
 exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {});

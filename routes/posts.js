@@ -14,4 +14,10 @@ router.get('/new-post', postController.new_blogpost_get);
 /* POST new blogpost */
 router.post('/new-post', postController.new_blogpost_post);
 
+/* GET edit blogpost */
+router.get('/edit-post', postController.blogpost_edit_get);
+
+/* POST edit blogpost */
+router.post('/edit-post', postController.blogpost_edit_post);
+
 module.exports = router;

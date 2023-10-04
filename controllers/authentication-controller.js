@@ -4,6 +4,7 @@ const Comments = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
+const passport = require('passport');
 
 exports.sign_up_get = asyncHandler(async (req, res, next) => {
   res.send('render user sign-up form');
@@ -101,16 +102,16 @@ exports.log_in_get = asyncHandler(async (req, res, next) => {
   res.send('Render log in form');
 });
 
-exports.log_in_post = asyncHandler(async (req, res, next) => {
-  passport.authenticate('local');
-  if (!req.user) {
-    res.send('log in failed');
-    return;
-  } else {
-    res.send(`${req.user} signed in`);
-    return;
-  }
-});
+exports.log_in_post = function (req, res, next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err) return next(err);
+    if (!user) return res.send('no user');
+    req.logIn(user, function (err) {
+      if (err) return next(err);
+    });
+    return res.send(`${user} logged in successfully`);
+  })(req, res, next);
+};
 
 exports.logout_get = function (req, res, next) {
   req.logout((err) => {

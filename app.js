@@ -6,7 +6,6 @@ const logger = require('morgan');
 const dotenv = require('dotenv').config();
 const passport = require('passport');
 const session = require('express-session');
-const passportConfig = require('./passport-config');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -37,9 +36,11 @@ app.use(
     cookie: { maxAge: 1 * 60 * 60 * 1000 }
   })
 );
-passportConfig(passport);
+
 app.use(passport.initialize());
 app.use(passport.session());
+const passportConfig = require('./passport-config');
+passportConfig(passport);
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -5,9 +5,6 @@ const postController = require('../controllers/post-controller');
 /* GET home page. */
 router.get('/', postController.all_blogposts_get);
 
-/* GET individual post */
-router.get('/:id', postController.blogpost_get);
-
 /* GET new blogpost */
 router.get('/new-post', postController.new_blogpost_get);
 
@@ -19,5 +16,8 @@ router.get('/edit-post', postController.blogpost_edit_get);
 
 /* POST edit blogpost */
 router.post('/edit-post', postController.blogpost_edit_post);
+
+/* GET individual post */
+router.get('/:id', postController.blogpost_get);
 
 module.exports = router;

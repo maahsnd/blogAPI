@@ -113,7 +113,7 @@ exports.log_in_post = function (req, res, next) {
   })(req, res, next);
 };
 
-exports.logout_get = function (req, res, next) {
+exports.logout_post = function (req, res, next) {
   req.logout((err) => {
     if (err) {
       return next(err);

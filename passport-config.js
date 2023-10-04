@@ -1,14 +1,14 @@
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
 const User = require('./models/user');
+const passportConfig = require('./passport-config');
 
 module.exports = function (passport) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
-      console.log(username, password);
       try {
         const user = await User.findOne({
-          email: username
+          user_name: username
         });
         if (!user) {
           return done(null, false, { message: 'Incorrect username' });

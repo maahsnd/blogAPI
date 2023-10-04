@@ -4,7 +4,9 @@ const authenticationController = require('../controllers/authentication-controll
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-  res.send('respond with a sign up/log in page, or with log out');
+  if (req.isAuthenticated()) {
+    res.send('respond with a sign up/log in page, or with log out' + req.user);
+  } else res.send('not authenticated');
 });
 
 router.get('/sign-up', authenticationController.sign_up_get);

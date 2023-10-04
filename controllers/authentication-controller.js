@@ -113,5 +113,3 @@ exports.logout_get = function (req, res, next) {
     res.send('Logged out');
   });
 };
-
-exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {});

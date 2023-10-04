@@ -78,3 +78,11 @@ exports.new_blogpost_post = [
     }
   })
 ];
+
+exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
+  res.send('edit get');
+});
+
+exports.blogpost_edit_post = asyncHandler(async (req, res, next) => {
+  res.send('edit post');
+});

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post-controller');
 const verifyToken = require('../verifyToken').verifyToken;
+const passport = require('passport');
 
 /* GET home page. */
 router.get('/', postController.all_blogposts_get);
@@ -13,7 +14,11 @@ router.get('/new-post', verifyToken, postController.new_blogpost_get);
 router.post('/new-post', postController.new_blogpost_post);
 
 /* GET edit blogpost */
-router.get('/edit-post', postController.blogpost_edit_get);
+router.get(
+  '/edit-post',
+  passport.authenticate('jwt', { session: false }),
+  postController.blogpost_edit_get
+);
 
 /* POST edit blogpost */
 router.post('/edit-post', postController.blogpost_edit_post);

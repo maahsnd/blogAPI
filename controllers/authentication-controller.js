@@ -114,7 +114,7 @@ exports.log_in_post = asyncHandler(async (req, res, next) => {
     return res.send('Incorrect password');
   }
 
-  const token = jwt.sign({ user }, process.env.SECRET, { expiresIn: '120s' });
+  const token = jwt.sign({ user }, process.env.SECRET, { expiresIn: '1hr' });
   return res.status(200).json({
     message: 'Auth passed',
     token

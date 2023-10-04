@@ -90,11 +90,7 @@ exports.new_blogpost_post = [
 ];
 
 exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
-  if (req.isAuthenticated()) {
-    res.send('render form to edit blog post');
-  } else {
-    res.redirect('/users/log-in');
-  }
+  res.send('blogpost edit get');
 });
 
 //to do

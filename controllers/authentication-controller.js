@@ -2,6 +2,7 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const Comments = require('../models/comment');
 const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 
 exports.sign_up_get = asyncHandler(async (req, res, next) => {
@@ -13,16 +14,22 @@ exports.sign_up_post = [
     .trim()
     .isLength({ max: 20 })
     .withMessage('First name not to exceed 20 char')
+    .isLength({ min: 1 })
+    .withMessage('first name required')
     .escape(),
   body('last_name')
     .trim()
     .isLength({ max: 20 })
     .withMessage('Last name not to exceed 20 char')
+    .isLength({ min: 1 })
+    .withMessage('last name required')
     .escape(),
   body('user_name')
     .trim()
     .isLength({ max: 20 })
     .withMessage('User name not to exceed 20 char')
+    .isLength({ min: 1 })
+    .withMessage('user name required')
     .custom(async (value) => {
       const username = await User.find({ user_name: value });
       if (username) {

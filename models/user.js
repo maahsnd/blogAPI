@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   first_name: { type: String, required: true, maxLength: 20 },
   last_name: { type: String, required: true, maxLength: 20 },
   user_name: { type: String, required: true, maxLength: 20 },
-  password: { type: String, required: true, maxLength: 30 },
+  password: { type: String, required: true, maxLength: 60 },
   email: { type: String, required: true, maxLength: 30 },
   join_date: { type: Date, default: Date.now }
 });

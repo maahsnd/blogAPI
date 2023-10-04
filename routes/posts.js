@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post-controller');
+const verifyToken = require('../verifyToken').verifyToken;
 
 /* GET home page. */
 router.get('/', postController.all_blogposts_get);
 
 /* GET new blogpost */
-router.get('/new-post', postController.new_blogpost_get);
+router.get('/new-post', verifyToken, postController.new_blogpost_get);
 
 /* POST new blogpost */
 router.post('/new-post', postController.new_blogpost_post);

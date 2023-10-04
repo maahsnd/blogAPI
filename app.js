@@ -6,6 +6,9 @@ const logger = require('morgan');
 const dotenv = require('dotenv').config();
 const passport = require('passport');
 const session = require('express-session');
+const jwt = require('jsonwebtoken');
+/*const jwtStrategy = require('./jwt');
+passport.use(jwtStrategy); */
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');

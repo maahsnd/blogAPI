@@ -4,7 +4,7 @@ const Comments = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
-const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 exports.sign_up_get = asyncHandler(async (req, res, next) => {
   res.send('render user sign-up form');
@@ -101,12 +101,25 @@ exports.log_in_get = asyncHandler(async (req, res, next) => {
   res.send('Render log in form');
 });
 
-exports.log_in_post = function (req, res, next) {
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/log-in'
-  })(req, res, next);
-};
+exports.log_in_post = asyncHandler(async (req, res, next) => {
+  let { username, password } = req.body;
+  const user = await User.findOne({
+    user_name: username
+  });
+  if (!user) {
+    return res.send('Username not found');
+  }
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    return res.send('Incorrect password');
+  }
+
+  const token = jwt.sign({ user }, process.env.SECRET, { expiresIn: '120s' });
+  return res.status(200).json({
+    message: 'Auth passed',
+    token
+  });
+});
 
 exports.logout_post = function (req, res, next) {
   req.logout((err) => {

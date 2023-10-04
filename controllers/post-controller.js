@@ -4,6 +4,7 @@ const Comments = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 //Display list of all blog posts
 exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
@@ -41,11 +42,15 @@ exports.blogpost_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.new_blogpost_get = asyncHandler(async (req, res, next) => {
-  if (req.isAuthenticated()) {
-    res.send('render form to create new blog post');
-  } else {
-    res.redirect('/users/log-in');
-  }
+  jwt.verify(req.token, process.env.SECRET, (err, data) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      res.json({
+        data
+      });
+    }
+  });
 });
 
 exports.new_blogpost_post = [

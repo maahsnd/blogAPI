@@ -85,7 +85,10 @@ exports.new_blogpost_post = [
 ];
 
 exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
-  res.send('blogpost edit get');
+  res.json({
+    user: req.user,
+    token: req.headers.authorization
+  });
 });
 
 //to do

@@ -42,14 +42,9 @@ exports.blogpost_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.new_blogpost_get = asyncHandler(async (req, res, next) => {
-  jwt.verify(req.token, process.env.SECRET, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      res.json({
-        data
-      });
-    }
+  res.json({
+    user: req.user,
+    token: req.headers.authorization
   });
 });
 
@@ -94,4 +89,40 @@ exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
 });
 
 //to do
-exports.blogpost_edit_post = asyncHandler(async (req, res, next) => {});
+exports.blogpost_edit_post = [
+  body('title')
+    .trim()
+    .isLength({ max: 30 })
+    .withMessage('Exceeds max length of 30')
+    .escape(),
+  body('text')
+    .trim()
+    .isLength({ min: 100, max: 10000 })
+    .withMessage('Text must be between 100 and 10,000 char')
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const blogPost = new Post({
+      title: req.body.title,
+      text: req.body.text,
+      user: req.body.user
+    });
+
+    if (req.body.published) {
+      blogPost.published = true;
+    }
+
+    if (!errors.isEmpty()) {
+      res.send(errors);
+      return;
+    } else {
+      const postId = await Post.findById(req.params.id);
+      blogPost._id = postId._id;
+      await Post.findByIdAndUpdate(req.params.id, blogPost, {});
+
+      res.send('Successfully created post: ' + blogPost);
+    }
+  })
+];

@@ -149,6 +149,10 @@ exports.new_comment = [
     } else {
       try {
         await newComment.save();
+        const post = await Post.findById(req.body.postId);
+        console.log(post);
+        post.comments.push(newComment);
+        await Post.findByIdAndUpdate(req.body.postId, post, {});
       } catch (err) {
         console.log('save error: ' + err);
       }

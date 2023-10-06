@@ -1,6 +1,6 @@
 const Post = require('../models/post');
 const User = require('../models/user');
-const Comments = require('../models/comment');
+const Comment = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const passport = require('passport');
@@ -91,7 +91,6 @@ exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-//to do
 exports.blogpost_edit_post = [
   body('title')
     .trim()
@@ -126,6 +125,38 @@ exports.blogpost_edit_post = [
       await Post.findByIdAndUpdate(req.params.id, blogPost, {});
 
       res.send('Successfully created post: ' + blogPost);
+    }
+  })
+];
+
+exports.new_comment = [
+  body('text')
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Max comment length 500 char'),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const newComment = new Comment({
+      text: req.body.text,
+      user: req.body.userId,
+      post: req.body.postId
+    });
+
+    if (!errors.isEmpty()) {
+      res.send(errors);
+      return;
+    } else {
+      try {
+        await newComment.save();
+      } catch (err) {
+        console.log('save error: ' + err);
+      }
+
+      res.json({
+        user: req.user,
+        token: req.headers.authorization
+      });
     }
   })
 ];

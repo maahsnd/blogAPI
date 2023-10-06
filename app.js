@@ -8,6 +8,7 @@ const passport = require('passport');
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const jwtStrategy = require('./jwt').JwtStrategy;
+const cors = require('cors');
 passport.use(jwtStrategy);
 
 const indexRouter = require('./routes/index');
@@ -15,6 +16,7 @@ const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 
 const app = express();
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const mongoose = require('mongoose');

@@ -107,13 +107,12 @@ exports.log_in_post = asyncHandler(async (req, res, next) => {
     user_name: username
   });
   if (!user) {
-    return res.status(401).json({
-      message: 'Username not found'
-    });
+    return res.send({ message: 'Username not found' });
   }
+
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return res.status(401).json({ message: 'Incorrect password' });
+    return res.send({ message: 'Incorrect password' });
   }
 
   const token = jwt.sign({ user }, process.env.SECRET, { expiresIn: '1hr' });

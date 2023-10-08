@@ -112,9 +112,9 @@ exports.blogpost_edit_post = [
       user: req.body.user
     });
 
-    if (req.body.published) {
-      blogPost.published = true;
-    }
+    req.body.published
+      ? (blogPost.published = true)
+      : (blogPost.published = false);
 
     if (!errors.isEmpty()) {
       res.send(errors);

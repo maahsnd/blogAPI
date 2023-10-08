@@ -21,14 +21,14 @@ router.post(
 
 /* GET edit blogpost */
 router.get(
-  '/edit-post',
+  '/:id/edit-post',
   passport.authenticate('jwt', { session: false }),
   postController.blogpost_edit_get
 );
 
 /* POST edit blogpost */
 router.post(
-  '/edit-post',
+  '/:id/edit-post',
   passport.authenticate('jwt', { session: false }),
   postController.blogpost_edit_post
 );

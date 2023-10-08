@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 
 //Display list of all blog posts
 exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
-  const allPosts = await Post.find({ published: true })
+  const allPosts = await Post.find({})
     .populate('user')
     .populate('comments')
     .populate({

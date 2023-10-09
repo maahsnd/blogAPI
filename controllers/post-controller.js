@@ -105,11 +105,15 @@ exports.blogpost_edit_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    const post = await Post.findById(req.params.id);
 
     const blogPost = new Post({
       title: req.body.title,
       text: req.body.text,
-      user: req.body.user
+      date: post.date,
+      user: req.body.user,
+      comments: req.body.comments,
+      _id: post._id
     });
 
     req.body.published
@@ -120,7 +124,6 @@ exports.blogpost_edit_post = [
       res.send(errors);
       return;
     } else {
-      const postId = await Post.findById(req.params.id);
       blogPost._id = postId._id;
       await Post.findByIdAndUpdate(req.params.id, blogPost, {});
 

@@ -24,21 +24,24 @@ exports.all_blogposts_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.blogpost_get = asyncHandler(async (req, res, next) => {
-  const blogPost = await Post.findById(req.params.id)
-    .populate('comments')
-    .populate('user')
-    .populate({
-      path: 'comments',
-      populate: {
-        path: 'user',
-        populate: { path: 'user_name' }
-      }
-    })
-    .exec();
-  if (!blogPost.published) {
-    throw new Error('post not published');
+  try {
+    console.log(req.params.id);
+    const blogPost = await Post.findById(req.params.id)
+      .populate('comments')
+      .populate('user')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user',
+          populate: { path: 'user_name' }
+        }
+      })
+      .exec();
+    console.log(blogPost);
+    res.send(blogPost);
+  } catch (error) {
+    console.log(error);
   }
-  res.send(blogPost);
 });
 
 exports.new_blogpost_get = asyncHandler(async (req, res, next) => {
@@ -92,44 +95,51 @@ exports.blogpost_edit_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.blogpost_edit_post = [
-  body('title')
-    .trim()
-    .isLength({ max: 30 })
-    .withMessage('Exceeds max length of 30')
-    .escape(),
-  body('text')
-    .trim()
-    .isLength({ min: 100, max: 10000 })
-    .withMessage('Text must be between 100 and 10,000 char')
-    .escape(),
+  // Validation middleware here...
 
-  asyncHandler(async (req, res, next) => {
-    const errors = validationResult(req);
-    const post = await Post.findById(req.params.id);
+  async (req, res, next) => {
+    console.log('Request Body:', req.body);
 
-    const blogPost = new Post({
-      title: req.body.title,
-      text: req.body.text,
-      date: post.date,
-      user: req.body.user,
-      comments: req.body.comments,
-      _id: post._id
-    });
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        console.error('Validation Errors:', errors.array());
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-    req.body.published
-      ? (blogPost.published = true)
-      : (blogPost.published = false);
+      // Fetch the existing post
+      const post = await Post.findById(req.body._id);
+      if (!post) {
+        console.error('Post not found');
+        return res.status(404).send('Post not found');
+      }
 
-    if (!errors.isEmpty()) {
-      res.send(errors);
-      return;
-    } else {
-      blogPost._id = postId._id;
-      await Post.findByIdAndUpdate(req.params.id, blogPost, {});
+      // Copy the comment IDs (if you intend to modify comments)
+      const comments = post.comments.map((comment) => comment._id);
 
-      res.send('Successfully created post: ' + blogPost);
+      // Create a new Post object with updated data
+      const blogPost = new Post({
+        title: req.body.title,
+        text: req.body.text,
+        date: post.date,
+        user: req.body.user,
+        comments: comments, // Optionally modify comments here
+        _id: post._id,
+        published: req.body.published // Update published status
+      });
+
+      // Update the existing post with the new data
+      const updatedPost = await Post.findByIdAndUpdate(post._id, blogPost, {
+        new: true // Return the updated post
+      });
+
+      console.log('Updated Post:', updatedPost);
+      res.json({ message: 'Post updated successfully', post: updatedPost });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
     }
-  })
+  }
 ];
 
 exports.new_comment = [

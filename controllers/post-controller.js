@@ -98,8 +98,6 @@ exports.blogpost_edit_post = [
   // Validation middleware here...
 
   async (req, res, next) => {
-    console.log('Request Body:', req.body);
-
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -133,7 +131,6 @@ exports.blogpost_edit_post = [
         new: true // Return the updated post
       });
 
-      console.log('Updated Post:', updatedPost);
       res.json({ message: 'Post updated successfully', post: updatedPost });
     } catch (error) {
       console.error('Error:', error);
@@ -166,6 +163,42 @@ exports.new_comment = [
         console.log(post);
         post.comments.push(newComment);
         await Post.findByIdAndUpdate(req.body.postId, post, {});
+      } catch (err) {
+        console.log('save error: ' + err);
+      }
+
+      res.json({
+        user: req.user,
+        token: req.headers.authorization
+      });
+    }
+  })
+];
+
+exports.edit_comment = [
+  body('text')
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Max comment length 500 char'),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    console.log(req.body);
+    const editedComment = new Comment({
+      text: req.body.text,
+      date: req.body.date,
+      user: req.body.user,
+      post: req.body.post,
+      _id: req.body._id
+    });
+    if (!errors.isEmpty()) {
+      res.send(errors);
+      return;
+    } else {
+      try {
+        await editedComment.save();
+        const comment = await Comment.findById(req.body._id);
+        await Comment.findByIdAndUpdate(req.body._id, comment, {});
       } catch (err) {
         console.log('save error: ' + err);
       }

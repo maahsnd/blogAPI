@@ -77,7 +77,7 @@ exports.new_blogpost_post = [
     }
 
     if (!errors.isEmpty()) {
-      res.send(errors);
+      res.status(400).send(errors);
       return;
     } else {
       await blogPost.save();

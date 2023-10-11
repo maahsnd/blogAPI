@@ -39,7 +39,7 @@ exports.new_comment = [
 ];
 
 exports.get_comment = asyncHandler(async (req, res, next) => {
-  const comment = await Comment.findById(req.body.id);
+  const comment = await Comment.findById(req.params.id);
   comment ? res.send(comment) : res.status(404).send('Comment not found');
 });
 
@@ -52,23 +52,25 @@ exports.edit_comment = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     console.log(req.body);
-    const editedComment = new Comment({
-      text: req.body.text,
-      date: req.body.date,
-      user: req.body.user,
-      post: req.body.post,
-      _id: req.body._id
-    });
+
     if (!errors.isEmpty()) {
       res.send(errors);
       return;
     } else {
       try {
-        await editedComment.save();
-        const comment = await Comment.findById(req.body._id);
-        await Comment.findByIdAndUpdate(req.body._id, comment, {});
+        const comment = await Comment.findById(req.params.id);
+        console.log('original:' + comment);
+        const editedComment = new Comment({
+          text: req.body.text,
+          date: req.body.date,
+          user: req.body.user,
+          post: req.body.post,
+          _id: req.body._id
+        });
+        console.log('edited:' + editedComment);
+        await Comment.findByIdAndUpdate(req.body._id, editedComment, {});
       } catch (err) {
-        console.log('save error: ' + err);
+        console.log('error: ' + err);
       }
 
       res.json({

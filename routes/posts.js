@@ -36,4 +36,10 @@ router.post(
 /* GET individual post */
 router.get('/:id', postController.blogpost_get);
 
+router.post(
+  '/:id/delete',
+  passport.authenticate('jwt', { session: false }),
+  postController.blogpost_delete
+);
+
 module.exports = router;

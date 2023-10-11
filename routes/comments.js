@@ -13,11 +13,8 @@ router.get('/:id', commentController.get_comment);
 
 router.post(
   '/:id/edit',
-  passport.authenticate(
-    'jwt',
-    { session: false },
-    commentController.edit_comment
-  )
+  passport.authenticate('jwt', { session: false }),
+  commentController.edit_comment
 );
 
 router.post(

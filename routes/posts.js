@@ -8,13 +8,13 @@ router.get('/', postController.all_blogposts_get);
 
 /* GET new blogpost */
 router.get(
-  '/new-post',
+  '/new',
   passport.authenticate('jwt', { session: false }),
   postController.new_blogpost_get
 );
 /* POST new blogpost */
 router.post(
-  '/new-post',
+  '/new',
   passport.authenticate('jwt', { session: false }),
   postController.new_blogpost_post
 );
@@ -35,11 +35,5 @@ router.post(
 
 /* GET individual post */
 router.get('/:id', postController.blogpost_get);
-
-router.post(
-  '/:id/new-comment',
-  passport.authenticate('jwt', { session: false }),
-  postController.new_comment
-);
 
 module.exports = router;

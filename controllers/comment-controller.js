@@ -51,7 +51,6 @@ exports.edit_comment = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    console.log(req.body);
 
     if (!errors.isEmpty()) {
       res.send(errors);
@@ -59,7 +58,6 @@ exports.edit_comment = [
     } else {
       try {
         const comment = await Comment.findById(req.params.id);
-        console.log('original:' + comment);
         const editedComment = new Comment({
           text: req.body.text,
           date: req.body.date,
@@ -67,7 +65,6 @@ exports.edit_comment = [
           post: req.body.post,
           _id: req.body._id
         });
-        console.log('edited:' + editedComment);
         await Comment.findByIdAndUpdate(req.body._id, editedComment, {});
       } catch (err) {
         console.log('error: ' + err);
@@ -83,6 +80,23 @@ exports.edit_comment = [
 
 exports.delete_comment = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(req.body.postid).populate('comments').exec();
+  console.log(post.comments);
+  const commentIndex = post.comments.findIndex(
+    (comment) => comment._id == req.params.id
+  );
+  if (commentIndex < 0) {
+    console.error('comment index not found');
+    return;
+  }
+  try {
+    post.comments.splice(commentIndex, 1);
+    await Post.findByIdAndUpdate(req.body.postid, post, {});
+  } catch (error) {
+    console.error('Error updating post: ' + error);
+    res.send(error);
+    return;
+  }
+
   try {
     await Comment.findByIdAndDelete(req.params.id);
   } catch (error) {
@@ -90,20 +104,6 @@ exports.delete_comment = asyncHandler(async (req, res, next) => {
     res.send(error);
     return;
   }
-  const commentIndex = post.comments.findIndex(
-    (comment) => comment._id === req.params.id
-  );
-  if (commentIndex < 0) {
-    console.error('Error getting comment index:' + error);
-    res.send(error);
-  }
-  try {
-    post.comments = post.comments.splice(commentIndex, 1);
-    await Post.findByIdAndUpdate(req.body.postid, post, {});
-  } catch (error) {
-    console.error('Error updating post: ' + error);
-    res.send(error);
-    return;
-  }
+
   res.send({ message: 'Comment deleted' });
 });

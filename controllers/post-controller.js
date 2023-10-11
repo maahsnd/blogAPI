@@ -139,6 +139,11 @@ exports.blogpost_edit_post = [
   }
 ];
 
+exports.get_comment = asyncHandler(async (req, res, next) => {
+  const comment = await Comment.findById(req.body.id);
+  comment ? res.send(comment) : res.status(404).send('Comment not found');
+});
+
 exports.new_comment = [
   body('text')
     .trim()
@@ -210,3 +215,30 @@ exports.edit_comment = [
     }
   })
 ];
+
+exports.delete_comment = asyncHandler(async (req, res, next) => {
+  const post = await Post.findById(req.body.postid).populate('comments').exec();
+  try {
+    await Comment.findByIdAndDelete(req.params.id);
+  } catch (error) {
+    console.error('Error deleting comment:' + error);
+    res.send(error);
+    return;
+  }
+  const commentIndex = post.comments.findIndex(
+    (comment) => comment._id === req.params.id
+  );
+  if (commentIndex < 0) {
+    console.error('Error getting comment index:' + error);
+    res.send(error);
+  }
+  try {
+    post.comments = post.comments.splice(commentIndex, 1);
+    await Post.findByIdAndUpdate(req.body.postid, post, {});
+  } catch (error) {
+    console.error('Error updating post: ' + error);
+    res.send(error);
+    return;
+  }
+  res.send({ message: 'Comment deleted' });
+});

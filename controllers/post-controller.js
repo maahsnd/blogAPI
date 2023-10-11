@@ -140,10 +140,10 @@ exports.blogpost_edit_post = [
 
 exports.blogpost_delete = asyncHandler(async (req, res, next) => {
   try {
-    await Post.findByIdAndDelete(req.params.id);
+    await Post.findByIdAndRemove(req.params.id);
   } catch (error) {
     console.error(error);
     return res.status(400).send(error);
   }
-  return res.status(200);
+  return res.status(200).send();
 });

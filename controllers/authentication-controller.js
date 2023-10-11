@@ -128,6 +128,6 @@ exports.logout_post = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.send('Logged out');
+    res.status(200).send();
   });
 };

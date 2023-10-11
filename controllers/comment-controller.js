@@ -1,10 +1,7 @@
 const Post = require('../models/post');
-const User = require('../models/user');
 const Comment = require('../models/comment');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
 
 exports.new_comment = [
   body('text')
